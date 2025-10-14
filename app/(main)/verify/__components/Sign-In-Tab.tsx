@@ -3,6 +3,7 @@
 import { Button } from '@/components/ui/button'
 import { CardAction, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
+import { authClient } from '@/utils/authClient'
 import React, { useState } from 'react'
 import { toast } from 'sonner'
 
@@ -15,6 +16,7 @@ function SignInTab() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
+    callbackURL: "http://localhost:3000/"
   });
 
 
@@ -22,7 +24,7 @@ function SignInTab() {
      setFormData(prev => ({...prev, [e.target.name]: e.target.value}))
   }
 
-  const handleSubmit = ()=>{
+  const handleSubmit = async()=>{
     if(!emailRegex.test(formData.email)){
       toast("Email format is not valid!", {
         style: {
@@ -41,7 +43,10 @@ function SignInTab() {
       return;
     }
 
-   console.log(formData, "formdata loaded successfully")    
+   const sendAuthRequest = await authClient.signIn.email(formData)
+   if(sendAuthRequest.data){
+    toast(`Welcome Back, ${sendAuthRequest.data?.user.name}`)
+   }
   }
   
   return (
