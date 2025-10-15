@@ -15,7 +15,7 @@ function SignUpTab() {
       email: "",
       password: "",
       name: "",
-      callbackURL: "/"
+      callbackURL: "http://localhost:3000"
     });
   
   
