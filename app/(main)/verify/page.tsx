@@ -1,29 +1,38 @@
 "use client";
-import { Button } from "@/components/ui/button";
 import {
   Card,
-  CardAction,
-  CardContent,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import React from "react";
+import React, { useState } from "react";
+import VerifyEmail from "./__components/email-verify";
+import { Tabs as tabs } from "@/types/AuthTypes";
 import SignUpTab from "./__components/Sign-Up-Tab";
 import SignInTab from "./__components/Sign-In-Tab";
+import ForgetPassword from "./__components/forget-password";
+
 
 function Page() {
+  const [TabSwitch, setTabSwitch] = useState<tabs>("sign-in");
+  const [Email, setEmail] = useState("")
+
+
+  const openEmailVerificationTab = (data: string)=>{
+   setEmail(data)
+   setTabSwitch("email-verification")
+  }
 
   
   return (
     <div className="h-screen w-full flex justify-center items-center">
-      <Tabs  defaultValue="sign-in" >
-
+      <Tabs value={TabSwitch} >
+    {TabSwitch === "email-verification" || TabSwitch === "forget-password" ? null : 
         <TabsList>
-          <TabsTrigger value="sign-in">Sign-In</TabsTrigger>
-          <TabsTrigger value="sign-up">Sign-Up</TabsTrigger>
+          <TabsTrigger  onClick={()=> setTabSwitch("sign-in")} value="sign-in">Sign-In</TabsTrigger>
+          <TabsTrigger  onClick={()=> setTabSwitch("sign-up")} value="sign-up">Sign-Up</TabsTrigger>
         </TabsList>
+        }
   {/* Tab 1 */}
 
         <TabsContent value="sign-in">
@@ -31,7 +40,7 @@ function Page() {
             <CardHeader>
               <CardTitle className="text-center text-2xl">SignIn</CardTitle>
             </CardHeader>
-            <SignInTab />
+            <SignInTab openEmaillVerificationTab={openEmailVerificationTab} setTabSwitch={setTabSwitch} />
           </Card>
         </TabsContent>
   {/* Tab 2 */}
@@ -41,10 +50,29 @@ function Page() {
             <CardHeader>
               <CardTitle className="text-center text-2xl">SignUp</CardTitle>
             </CardHeader>
-            <SignUpTab />
+            <SignUpTab openEmaillVerificationTab={openEmailVerificationTab}/>
           </Card>
         </TabsContent>
+  {/* Tab 3 */}
 
+        <TabsContent value="email-verification">
+          <Card className="w-[40vw] bg-gray-800 text-white">
+            <CardHeader>
+              <CardTitle className="text-center text-2xl">Verify Your Email</CardTitle>
+            </CardHeader>
+            <VerifyEmail email={Email}/>
+          </Card>
+        </TabsContent>
+  {/* Tab 3 */}
+
+  <TabsContent value="forget-password">
+          <Card className="w-[40vw]">
+            <CardHeader>
+              <CardTitle className="text-center text-2xl">Send Forget Password Email</CardTitle>
+            </CardHeader>
+            <ForgetPassword />
+          </Card>
+        </TabsContent>
       </Tabs>
     </div>
   );
